@@ -14,6 +14,16 @@ class Data_model extends CI_Model {
 
         return $headers;
     }
+    public function getRowCount($limit) {
+        $query = $this->db->get('student_info');
+        $no_of_students = $query->num_rows();
+    
+        if ($no_of_students % $limit == 0) {
+            return $no_of_students / $limit;
+        } else {
+            return floor($no_of_students / $limit) + 1;
+        }
+    }
 
     public function get_table_data($limit, $offset) {
         $query = $this->db->limit($limit, $offset)->get('student_info');

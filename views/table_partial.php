@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 <table class="table">
-    <!-- <thead>
+   <thead>
         <tr>
             <?php if (!empty($table_rows)): ?>
                 <?php foreach ($table_rows[0] as $column_name => $column_value): ?>
@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <?php endforeach; ?>
             <?php endif; ?>
         </tr>
-    </thead> -->
+    </thead>
     <thead>
         
     </thead>

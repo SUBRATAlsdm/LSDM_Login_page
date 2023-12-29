@@ -17,45 +17,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <?php endif; ?>
 
 
-    <table class="table">
-    <thead>
-            <tr>
-                <?php if (!empty($table_headers)): ?>
-                    <?php foreach ($table_headers as $column_name): ?>
-                        <th><?= $column_name; ?></th>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tr>
-        </thead>
-    </table>
     <table class="table" id="data-table"> 
         <tbody id="table-body">
                     
         </tbody>
     </table>
 
+    
+
 <!-- ///////////Buttn(to Load more button)//////////////////-->
 <div id="load-more-container">
-    <button id="load-more-button">Load More</button>
+    <button id="load-pre-button">Prev</button>
+    <button id="current_button"><?php echo isset($_POST['page']) ? htmlspecialchars($_POST['page']) : 'Default Text'; ?></button>
+    <button id="load-more-button">Next</button>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script>
-    var page = 1;
-
+    var page = 0;
+    var maxPageForStudent = <?php echo $max_page_for_student; ?>;
     $(document).ready(function () {
+        loadMoreData();
         function loadMoreData() {
+                        //for current page index check
+                        console.log(page);
+                        if(page<maxPageForStudent){
+                        page++;//to increase the page
+                        }
+                        //for next page index
+                        console.log(page);
             $.ajax({
                 type: 'GET',
                 url: '<?= base_url('index.php/home/get_table_data'); ?>/' + page,
                 success: function (data) {
                     if (data.trim() !== '') {
+                        
+                        $('#table-body').empty();
                         $('#table-body').append(data);
-                        //for current page index check
-                        console.log(page);
-                        page++;
-                        //for next page index
-                        console.log(page);
+
+                        $('#current_button').text(page);
+                        
+                        
                     } else {
                         alert('No more data available.');
                     }
@@ -66,11 +68,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             });
         }
 
-        loadMoreData();
+        function loadPreData() {
+            //for current page index check
+                        console.log(page);
+                        if(page>1){
+                        page--;//to decrease the page
+                        }
+                        //for next page index
+                        console.log(page);
+                        
+            $.ajax({
+                
+                type: 'GET',
+                url: '<?= base_url('index.php/home/get_table_data'); ?>/' + page,
+                success: function (data) {
+                    if (data.trim() !== '') {
+                        
+                        console.log(page);
+                        $('#table-body').empty();
+                        $('#table-body').append(data);
+
+                        $('#current_button').text(page);
+                        
+                        
+                    } else {
+                        alert('No more data available.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+        }
+
 
         // Load more data on button click
         $('#load-more-button').on('click', function () {
             loadMoreData();
+        });
+
+        $('#load-pre-button').on('click', function () {
+            loadPreData();
         });
     });
 </script>
